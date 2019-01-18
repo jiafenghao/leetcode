@@ -1,0 +1,2 @@
+# leetcode
+for good thinking
