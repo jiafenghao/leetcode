@@ -1,0 +1,72 @@
+// Source : https://oj.leetcode.com/problems/permutations/
+// Author : wind
+// Date   : 2019-01-19
+
+/********************************************************************************** 
+* 
+* Given a collection of numbers, return all possible permutations.
+* 
+* For example,
+* [1,2,3] have the following permutations:
+* [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], and [3,2,1].
+* 
+*               
+**********************************************************************************/
+Solution1:Recrusive based on DFS
+//DFS求解，并用visited数组来标识是否已访问过，level表示拼出的个数，若达到了nums的长度，则是一个全排列。
+#include "stdafx.h"
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void perm(vector<int>nums,vector<vector<int>> &res, 
+	vector<int> &out,int level, vector<int>&visited){
+	if (level == nums.size()){
+		res.push_back(out);
+	}
+	for (int i = 0; i < nums.size(); i++){
+		if (visited[i] == 1)continue;//如果被访问过，跳过此步
+		visited[i] = 1;
+		out.push_back(nums[i]);
+		perm(nums, res, out, level + 1, visited);
+		out.pop_back();
+		visited[i] = 0;
+	}
+}
+void permutations(vector<int>nums){
+	vector<vector<int>>res;
+	vector<int> out, visited(nums.size(), 0);
+	perm(nums, res, out, 0, visited);
+	cout << "results" << endl;
+	for (auto a : res){
+		for (int s : a){
+			cout << s;
+		}
+		cout << endl;
+	}
+}
+int main()
+{
+	permutations(vector<int>{1, 2, 3});
+}
+
+solution2:recrusive base on DFS by swap;
+/*还有一种递归的写法，更简单一些，这里是每次交换num里面的两个数字，经过递归可以生成所有的排列情况。这里你可能注意到，为啥在递归
+函数中，push_back()了之后没有返回呢，而解法一或者是 Combinations 的递归解法在更新结果res后都return了呢？其实如果你仔细看代码
+的话，此时start已经大于等于num.size()了，而下面的for循环的i是从start开始的，根本就不会执行for循环里的内容，就相当于return了，
+但其实为了避免混淆，最好还是加上，免得和前面的搞混了.*/
+   vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> res;
+        perm(nums,0,res);
+        return res;
+    }
+    void perm(vector<int>&nums,int begin,vector<vector<int>>&res){
+        if(begin==nums.size()){
+            res.push_back(nums);
+        }
+        for(int i=begin;i<nums.size();i++){
+            swap(nums[begin],nums[i]);
+            perm(nums,begin+1,res);
+            swap(nums[i],nums[begin]);
+        }
+    }
